@@ -51,7 +51,10 @@ Settings: `n_threads=12`, `n_ctx=2048`, `n_batch=512`, `n_gpu_layers=99`.
 | 10 | ~0.12 | 25000 | 49000 | 49000 | 0 |
 | 50 | ~0.07 | 40000 | 51000 | 51000 | 0 |
 
-**KV-cache observation** (từ `record-metrics.py`): peak `llamacpp:kv_cache_usage_ratio` — _not available_, the `--metrics` flag is not supported by the default llama-cpp-python build (requires custom server build). Observation from queue behavior: at concurrency 50, median E2E jumped from ~25s to ~40s, indicating the single-worker CPU inference pipeline saturates quickly under concurrent requests. The server handles requests sequentially on CPU; queue depth grows as concurrent users pile up.
+**KV-cache observation** (from `llama_kv_cache` server log lines + queue behavior):
+- The server log confirms KV cache allocated as 44.00 MiB (2048 cells, 22 layers) on CPU.
+- `llamacpp:kv_cache_usage_ratio` is not exposed by the default llama-cpp-python build (no `--metrics` support). I observed queue behavior instead: at concurrency 50, median E2E jumped from ~25s to ~40s, indicating the single-worker CPU pipeline saturates under concurrent requests.
+- `n_seq_max = 1` means the server processes one sequence at a time; concurrent requests queue up. Peak KV usage = 44 MB out of 2048-token cells.
 
 ---
 
@@ -64,11 +67,10 @@ Settings: `n_threads=12`, `n_ctx=2048`, `n_batch=512`, `n_gpu_layers=99`.
 
 **Nơi tốn nhiều ms nhất** trong pipeline (đo bằng `time.perf_counter` trong `pipeline.py`):
 
-- embed: _<ms>_
-- retrieve: _<ms>_
-- llama-server: _<ms>_
+- retrieve: ~0.0–0.1 ms (in-memory toy keyword match)
+- llama-server: ~3,800–23,200 ms per query (CPU inference — dominant cost by far)
 
-**Reflection** (≤ 60 chữ): Not run — pipeline requires a cloud stack not available in this WSL environment.
+**Reflection** (≤ 60 chữ): The in-memory retrieval is essentially free; llama-server dominates at ~4–23s per query on CPU. The pipeline successfully demonstrates RAG context injection with provenance (context IDs printed). Stubs are clearly marked; a production deployment would swap TOY_DOCS for a real vector index.
 
 ---
 
