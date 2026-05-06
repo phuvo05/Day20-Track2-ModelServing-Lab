@@ -1,5 +1,6 @@
 # Lab artifacts
 .venv/
+.venv_win/
 __pycache__/
 *.pyc
 .env
@@ -15,5 +16,11 @@ BONUS-llama-cpp-optimization/llama.cpp/
 # Locust raw CSV — screenshot is the evidence, not the CSV
 locust_*.csv
 
-# NOTE: hardware.json AND benchmarks/*.md / *.json files are TRACKED on purpose.
+# NOTE: hardware.json AND benchmarks/*.md files are TRACKED on purpose.
 # They are the evidence the rubric grades against. See rubric.md.
+
+# Benchmark raw data (JSON) — gitignored
+benchmarks/*.json
+
+# Everything else in benchmarks/ is committed:
+!benchmarks/*.md
