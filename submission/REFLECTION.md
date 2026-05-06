@@ -111,8 +111,8 @@ _Surprising: even on an RTX 4050 laptop, the WSL2 network constraint was the rea
 - [x] `benchmarks/bonus-*.md` đã commit (ít nhất 1 sweep)
 - [x] Ít nhất 6 screenshots trong `submission/screenshots/` (06-bonus-sweep.png added)
 - [x] At least one bonus challenge attempted (C1-C7 in CHALLENGES.md)
-- [ ] `make verify` exit 0 (chạy ngay trước khi push)
-- [ ] Repo trên GitHub ở chế độ **public**
-- [ ] Đã paste public repo URL vào VinUni LMS
+- [x] `make verify` exit 0 (chạy ngay trước khi push)
+- [x] Repo trên GitHub ở chế độ **public**
+- [x] Đã paste public repo URL vào VinUni LMS
 
 ---
